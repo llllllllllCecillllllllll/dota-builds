@@ -2,6 +2,7 @@
   'use strict';
   var originalItemChoices=null;
   function escLocal(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+  function enchantmentNames(){return (window.DOTA_ENCHANTMENTS||[]).map(function(x){return x&&x[0];}).filter(Boolean);}
   function mergeEnchantmentPaths(){
     if(!window.DOTA_LOCAL_ASSETS) return;
     (window.DOTA_ENCHANTMENTS||[]).forEach(function(x){if(x&&x[0]&&x[1])window.DOTA_LOCAL_ASSETS.items[x[0]]=x[1];});
@@ -9,9 +10,14 @@
   function extraNames(){
     var c=window.DOTA_EXTRA_CATALOG||{},out=[];
     Object.keys(c).forEach(function(k){(c[k]||[]).forEach(function(n){if(out.indexOf(n)<0)out.push(n);});});
+    enchantmentNames().forEach(function(n){if(out.indexOf(n)<0)out.push(n);});
     return out;
   }
-  function extraFor(cat){return ((window.DOTA_EXTRA_CATALOG||{})[cat]||[]).slice();}
+  function extraFor(cat){
+    var a=((window.DOTA_EXTRA_CATALOG||{})[cat]||[]).slice();
+    if(cat==='Зачарования')enchantmentNames().forEach(function(n){if(a.indexOf(n)<0)a.push(n);});
+    return a;
+  }
   function extraHtml(list){return list.map(function(x){return '<button class="item-choice" data-item="'+escLocal(x)+'" draggable="true">'+imageTag(x)+'<span class="item-name">'+escLocal(x)+'</span></button>';}).join('');}
   function patchChoices(){
     if(typeof window.itemChoices!=='function')return;
