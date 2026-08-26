@@ -1,7 +1,22 @@
 window.DOTA_LOCAL_ASSETS={heroes:{},items:{},ready:false};
 (function(){
-  var HERO_ALIASES={"Outworld Destroyer":"Outworld Devourer","Ringmaster":"Ringmaster"};
-  var ITEM_ALIASES={"Kaya and Yasha":"Yasha and Kaya","Eul's Scepter":"Eul's Scepter of Divinity"};
+  var HERO_ALIASES={
+    "Outworld Destroyer":"Outworld Devourer",
+    "Ringmaster":"Ring Master"
+  };
+  var HERO_FALLBACKS={
+    "Kez":"assets/heroes/kez.png",
+    "Largo":"assets/heroes/largo.png",
+    "Ringmaster":"assets/heroes/ringmaster.png",
+    "Underlord":"assets/heroes/abyssal_underlord.png"
+  };
+  var ITEM_ALIASES={
+    "Kaya and Yasha":"Yasha and Kaya",
+    "Eul's Scepter":"Eul's Scepter of Divinity"
+  };
+  var ITEM_FALLBACKS={
+    "Kaya and Yasha":"assets/items/yasha_and_kaya.png"
+  };
   function lookup(map,name,aliases){
     if(map[name]) return map[name];
     var a=aliases[name];
@@ -10,12 +25,13 @@ window.DOTA_LOCAL_ASSETS={heroes:{},items:{},ready:false};
   }
   function heroPath(name){
     var rel=lookup(window.DOTA_LOCAL_ASSETS.heroes,name,HERO_ALIASES);
-    if(name==='Ringmaster' && !rel) rel='heroes/ringmaster.png';
-    return rel?('assets/'+rel):'';
+    if(rel) return 'assets/'+rel;
+    return HERO_FALLBACKS[name]||'';
   }
   function itemPath(name){
     var rel=lookup(window.DOTA_LOCAL_ASSETS.items,name,ITEM_ALIASES);
-    return rel?('assets/'+rel):'';
+    if(rel) return 'assets/'+rel;
+    return ITEM_FALLBACKS[name]||'';
   }
   window.heroImage=heroPath;
   window.itemImage=itemPath;
