@@ -53,10 +53,9 @@
     });
   }
 
-  // HTML5 drag is useful with a mouse. The pointer implementation below also
-  // makes the same operation work on phones/tablets where HTML5 drag is weak.
   var drag=null;
 
+  // Desktop HTML5 drag support.
   document.addEventListener('dragstart',function(e){
     var item=closest(e.target,'.item-choice');
     if(item && e.dataTransfer){
@@ -97,20 +96,17 @@
 
     if(item){
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
       a.chooseForSlot(to);
       a.pickItem(item);
       return;
     }
+
     if(fromRaw!==''){
       var from=Number(fromRaw);
-      if(Number.isInteger(from) && from>=0){
+      if(Number.isInteger(from) && from>=0 && from!==to){
         e.preventDefault();
-        e.stopPropagation();
-        window.eval('selected.slots['+from+'] = selected.slots['+to+']; selected.slots['+to+'] = '+from+'=== '+to+' ? selected.slots['+to+'] : selected.slots['+from+'];');
-        // The expression above is intentionally replaced below with the safe
-        // temporary-value operation; keeping it in one eval avoids exposing
-        // the app's lexical selected variable globally.
+        e.stopImmediatePropagation();
         window.eval('(function(){var s=selected.slots,t=s['+from+'];s['+from+']=s['+to+'];s['+to+']=t;save();renderEditor();})();');
       }
     }
@@ -121,7 +117,8 @@
     if(el) el.classList.remove('dragging');
   });
 
-  // Pointer/touch drag fallback.
+  // Pointer/touch fallback. This makes dragging work on iPhone/iPad as well
+  // as with a mouse, without relying on the browser's HTML5 DnD implementation.
   document.addEventListener('pointerdown',function(e){
     var item=closest(e.target,'.item-choice');
     var slot=closest(e.target,'.inv-slot');
