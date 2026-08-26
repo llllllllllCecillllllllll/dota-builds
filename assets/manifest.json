@@ -126,7 +126,8 @@
     "Primal Beast": "heroes/primal_beast.png",
     "Muerta": "heroes/muerta.png",
     "Kez": "heroes/kez.png",
-    "Largo": "heroes/largo.png"
+    "Largo": "heroes/largo.png",
+    "Ringmaster": "heroes/ringmaster.png"
   },
   "items": {
     "Blink Dagger": "items/blink.png",
@@ -612,6 +613,7 @@
     "Chasm Stone": "items/chasm_stone.png",
     "Partisan's Brand": "items/partisans_brand.png",
     "Nimble": "items/enhancement_nimble.png",
-    "Leviathan's Fish": "items/tidehunter_fish.png"
+    "Leviathan's Fish": "items/tidehunter_fish.png",
+    "Kaya and Yasha": "items/yasha_and_kaya.png"
   }
 }
