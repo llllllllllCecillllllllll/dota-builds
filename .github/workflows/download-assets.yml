@@ -21,11 +21,10 @@ jobs:
           set -euo pipefail
           mkdir -p assets/heroes assets/items
           python - <<'PY'
-          import json, os, re, urllib.request
+          import json, urllib.request
           from pathlib import Path
 
           root=Path('assets')
-          root.mkdir(exist_ok=True)
           headers={'User-Agent':'Dota-Assistant asset updater'}
 
           def get(url):
@@ -65,6 +64,32 @@ jobs:
               except Exception as e:
                   print('item failed',name,e)
 
+          # Explicitly repair the newer names that may differ in the upstream data.
+          forced_heroes={
+              'Kez':'heroes/kez.png',
+              'Largo':'heroes/largo.png',
+              'Ringmaster':'heroes/ringmaster.png',
+              'Underlord':'heroes/abyssal_underlord.png'
+          }
+          for name,path in forced_heroes.items():
+              try:
+                  (root/path).write_bytes(get(base+'/apps/dota2/images/dota_react/heroes/'+Path(path).name))
+                  hero_map[name]=path
+              except Exception as e:
+                  print('forced hero failed',name,e)
+
+          # Dota's current item name is "Yasha and Kaya"; the app displays "Kaya and Yasha".
+          try:
+              p='items/yasha_and_kaya.png'
+              (root/p).write_bytes(get(base+'/apps/dota2/images/dota_react/items/yasha_and_kaya.png'))
+              item_map['Yasha and Kaya']=p
+              item_map['Kaya and Yasha']=p
+          except Exception as e:
+              print('forced item failed Kaya and Yasha',e)
+
+          # Never expose Pup's Paws in the local manifest.
+          item_map.pop("Pup's Paws",None)
+
           (root/'manifest.json').write_text(json.dumps({'heroes':hero_map,'items':item_map},ensure_ascii=False,indent=2),encoding='utf-8')
           print('heroes:',len(hero_map),'items:',len(item_map))
           PY
@@ -78,6 +103,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No asset changes.'
           else
-            git commit -m 'Add local Dota 2 hero and item assets'
+            git commit -m 'Repair local Dota hero and item assets'
             git push
           fi
