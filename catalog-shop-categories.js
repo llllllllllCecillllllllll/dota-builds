@@ -13,10 +13,10 @@
     'Оружие':['Crystalys','Armlet of Mordiggian','Meteor Hammer','Skull Basher','Shadow Blade','Desolator','Battle Fury','Nullifier','Monkey King Bar','Radiance','Revenant\'s Brooch','Daedalus','Ethereal Blade','Khanda','Butterfly','Silver Edge','Abyssal Blade','Divine Rapier','Disperser','Bloodthorn'],
     'Артефакты':['Dragon Lance','Kaya','Sange','Yasha','Phylactery','Diffusal Blade','Echo Sabre','Mage Slayer','Maelstrom','Heaven\'s Halberd','Yasha and Kaya','Kaya and Sange','Sange and Yasha','Harpoon','Satanic','Eye of Skadi','Mjollnir','Arcane Blink','Overwhelming Blink','Swift Blink']
   };
-  function unique(a){var s=Object.create(null),o=[];(a||[]).forEach(function(x){if(x&&!s[x]){s[x]=1;o.push(x);}});return o;}
-  function esc(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c];});}
   var N=['Occult Bracelet','Kobold Cup','Chipped Vest','Pollywog Charm','Dormant Curio','Duelist Gloves','Weighted Dice','Ash Legion Shield','Dagger of Ristul','Stonefeather Satchel','Possessed Mask','Forager\'s Kit','Essence Ring','Mana Draught','Poor Man\'s Shield','Searing Signet','Tumbler\'s Toy','Defiant Shell','Crippling Crossbow','Medallion of Courage','Seeds of Serenity','Serrated Shiv','Gunpowder Gauntlet','Jidi Pollen Bag','Psychic Headband','Unrelenting Eye','Cloak of Flames','Spellslinger','Stormcrafter','Partisan\'s Brand','Giant\'s Maul','Rattlecage','Idol of Scree\'auk','Flayer\'s Bota','Metamorphic Mandible','Dandelion Amulet','Enchanter\'s Bauble','Prophet\'s Pendulum','Conjurer\'s Catalyst','Stygian Desolator','Fallen Sky','Book of the Dead','Minotaur Horn','Spider Legs','Riftshadow Prism','Dezun Bloodrite','Divine Regalia','Harmonizer','Witchbane'];
   var E=['Quickened','Vital','Brawny','Tough','Alert','Mystical','Greedy','Crude','Nimble','Keen-eyed','Titanic','Timeless','Evolved','Fleetfooted','Vampiric','Hulking','Audacious','Feverish','Manic'];
+  function unique(a){var s=Object.create(null),o=[];(a||[]).forEach(function(x){if(x&&!s[x]){s[x]=1;o.push(x);}});return o;}
+  function esc(s){return String(s==null?'':s).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c];});}
   function allShop(){return unique(Object.keys(C).reduce(function(a,k){return a.concat(C[k]);},[]));}
   function allNeutral(){return unique(N.concat(E));}
   function matches(x,q){return !q||x.toLocaleLowerCase('ru-RU').indexOf(q)>=0;}
@@ -34,7 +34,7 @@
   }
   window.__DOTA_SHOP_CATEGORIES__=C;window.__DOTA_SHOP_NEUTRALS__=allNeutral();
   document.addEventListener('pointerdown',function(e){var b=e.target.closest&&e.target.closest('.categories .cat');if(!b)return;e.preventDefault();e.stopImmediatePropagation();itemCategory=b.dataset.category||'Все';renderCatalog();},true);
-  document.addEventListener('input',function(e){if(e.target&&e.target.id==='itemSearch'){itemQuery=e.target.value||'';renderCatalog();}},true);
+  document.addEventListener('input',function(e){if(e.target&&e.target.id==='itemSearch'){e.preventDefault();e.stopImmediatePropagation();itemQuery=e.target.value||'';renderCatalog();}},true);
   function start(){renderCatalog();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
