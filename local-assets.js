@@ -11,5 +11,5 @@ window.DOTA_LOCAL_ASSETS={heroes:{},items:{},ready:false};
   function escLocal(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})}
   window.heroImage=heroPath;window.itemImage=itemPath;
   window.imageTag=function(name,type){type=type||'item';var src=type==='hero'?heroPath(name):itemPath(name),cls=type==='hero'?'hero-art':'item-art';if(!src)return '<span class="'+cls+' no-image">'+escLocal(name)+'</span>';return '<img class="'+cls+'" src="'+src+'" alt="'+escLocal(name)+'" loading="lazy" decoding="async" onerror="this.style.display=\'none\';this.parentElement.classList.add(\'no-image\')">'};
-  fetch('assets/manifest.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(m){window.DOTA_LOCAL_ASSETS.heroes=m.heroes||{};window.DOTA_LOCAL_ASSETS.items=m.items||{};window.DOTA_LOCAL_ASSETS.ready=true;if(typeof render==='function')render()}).catch(function(e){console.warn('Local Dota assets manifest unavailable',e)});
+  fetch('assets/manifest.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(m){window.DOTA_LOCAL_ASSETS.heroes=m.heroes||{};window.DOTA_LOCAL_ASSETS.items=m.items||{};window.DOTA_LOCAL_ASSETS.ready=true}).catch(function(e){console.warn('Local Dota assets manifest unavailable',e)});
 })();
