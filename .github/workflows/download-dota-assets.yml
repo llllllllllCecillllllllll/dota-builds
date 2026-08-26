@@ -1,0 +1,128 @@
+name: Download Dota 2 item assets
+on:
+  push:
+    branches: [dev/v1.03]
+    paths:
+      - '.github/workflows/download-dota-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: dev/v1.03
+
+      - name: Download official Dota assets
+        shell: pwsh
+        run: |
+          git clone --depth 1 https://github.com/CaptchaQ/dota2-assets-downloader.git downloader
+          ./downloader/download_dota_assets.ps1 -OutputRoot "$PWD/dota_download" -SkipHeroes -SkipAbilities -SkipHeroLegacy -SkipAbilitiesLegacy -SkipItemsLegacy -SkipData
+
+      - name: Build local item catalog
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/items
+          find dota_download/abilities_items -type f -name 'item_*.png' -exec cp -f {} assets/items/ \; || true
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+          root='dota_download/data'
+          items_file=os.path.join(root,'opendota_items.json')
+          items=json.load(open(items_file,encoding='utf-8')) if os.path.exists(items_file) else {}
+          catalog={"Другое":[],"Нейтральные":[],"Зачарования":[]}
+          def slug(s):
+              s=s.lower().replace("'",'').replace('&','and')
+              s=re.sub(r'[^a-z0-9]+','_',s).strip('_')
+              return s
+          for v in (items.values() if isinstance(items,dict) else items):
+              name=v.get('dname') or v.get('name','').replace('item_','').replace('_',' ')
+              internal=v.get('name','').replace('item_','')
+              if not name: continue
+              fn='item_'+internal+'.png'
+              src=os.path.join('assets/items',fn)
+              if not os.path.exists(src):
+                  alt=os.path.join('assets/items','item_'+slug(internal)+'.png')
+                  if os.path.exists(alt): src=alt
+              tier=v.get('neutral_tier')
+              cat='Нейтральные' if tier else 'Другое'
+              if name not in catalog[cat]: catalog[cat].append(name)
+          try:
+              u='https://raw.githubusercontent.com/DotaFlow/steam_api_dumps/master/web/items/_NeutralItems.json'
+              data=json.load(urllib.request.urlopen(u,timeout=30))
+              vals=data.values() if isinstance(data,dict) else data
+              for v in vals:
+                  name=v.get('name') or v.get('localized_name') or v.get('dname')
+                  if name and name not in catalog['Нейтральные']: catalog['Нейтральные'].append(name)
+          except Exception as e:
+              print('Neutral dump warning:',e)
+          for k in catalog: catalog[k]=sorted(set(catalog[k]),key=lambda x:x.lower())
+          with open('assets/catalog.js','w',encoding='utf-8') as f:
+              f.write('window.DOTA_EXTRA_CATALOG='+json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+';\n')
+          old='assets/manifest.json'
+          manifest={'heroes':{},'items':{}}
+          for v in (items.values() if isinstance(items,dict) else items):
+              name=v.get('dname') or v.get('name','').replace('item_','').replace('_',' ')
+              internal=v.get('name','').replace('item_','')
+              if not name or not internal: continue
+              for fn in [f'item_{internal}.png',f'item_{slug(internal)}.png']:
+                  if os.path.exists(os.path.join('assets/items',fn)):
+                      manifest['items'][name]='items/'+fn
+                      break
+          if os.path.exists(old):
+              try:
+                  prev=json.load(open(old,encoding='utf-8'))
+                  for k,v in prev.get('heroes',{}).items(): manifest['heroes'].setdefault(k,v)
+                  for k,v in prev.get('items',{}).items(): manifest['items'].setdefault(k,v)
+              except Exception: pass
+          with open(old,'w',encoding='utf-8') as f: json.dump(manifest,f,ensure_ascii=False,indent=2)
+          print('Items in manifest:',len(manifest['items']))
+          print('Neutral names:',len(catalog['Нейтральные']))
+          PY
+
+      - name: Download neutral enchantment icons from Liquipedia Commons
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          os.makedirs('assets/items/enchantments',exist_ok=True)
+          api='https://liquipedia.net/commons/api.php'
+          params={'action':'query','list':'categorymembers','cmtitle':'Category:Dota_2_neutral_item_enchantments_icons','cmlimit':'500','format':'json'}
+          req=urllib.request.Request(api+'?'+urllib.parse.urlencode(params),headers={'User-Agent':'DotaAssistant/1.03 asset importer'})
+          data=json.load(urllib.request.urlopen(req,timeout=30))
+          members=data.get('query',{}).get('categorymembers',[])
+          catalog=[]
+          for m in members:
+              title=m.get('title','')
+              if not title.startswith('File:'): continue
+              q={'action':'query','titles':title,'prop':'imageinfo','iiprop':'url','format':'json'}
+              req=urllib.request.Request(api+'?'+urllib.parse.urlencode(q),headers={'User-Agent':'DotaAssistant/1.03 asset importer'})
+              d=json.load(urllib.request.urlopen(req,timeout=30))
+              pages=d.get('query',{}).get('pages',{})
+              page=next(iter(pages.values()),{})
+              info=(page.get('imageinfo') or [{}])[0]
+              url=info.get('url')
+              if not url: continue
+              name=title[5:].replace(' icon.png','').replace(' Enchantment itemicon dota2 gameasset.png','').replace(' Enchantment icon.png','')
+              out='assets/items/enchantments/'+name.lower().replace(' ','_').replace("'",'')+'.png'
+              try:
+                  urllib.request.urlretrieve(url,out)
+                  catalog.append((name,'items/enchantments/'+os.path.basename(out)))
+              except Exception as e: print('skip',title,e)
+          with open('assets/enchantments.json','w',encoding='utf-8') as f: json.dump(catalog,f,ensure_ascii=False,indent=2)
+          print('Downloaded enchantments:',len(catalog))
+          PY
+
+      - name: Commit downloaded assets
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/catalog.js assets/enchantments.json assets/manifest.json assets/items
+          if git diff --cached --quiet; then echo 'No asset changes'; exit 0; fi
+          git commit -m 'Add complete Dota item, neutral and enchantment assets'
+          git push origin HEAD:dev/v1.03
