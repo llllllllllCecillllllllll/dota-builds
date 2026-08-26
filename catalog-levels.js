@@ -4,26 +4,27 @@
     {name:'Dagon 3',categories:['Магия']},
     {name:'Dagon 4',categories:['Магия']},
     {name:'Dagon 5',categories:['Магия']},
-    {name:'Boots of Travel 2',categories:['Поддержка']}
+    {name:'Boots of Travel 2',categories:['Аксессуары']}
   ];
   function esc(s){return String(s).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c];});}
   function levelCards(category){
-    return LEVELS.filter(function(item){return category==='Все'||item.categories.indexOf(category)!==-1;}).map(function(item){
-      var name=item.name;
-      return '<button class="item-choice" data-item="'+esc(name)+'" draggable="true">'+imageTag(name)+'<span class="item-name">'+esc(name)+'</span></button>';
-    }).join('');
+    var out=[];
+    LEVELS.forEach(function(x){if(x.categories.indexOf(category)>=0)out.push(x.name);});
+    return out;
   }
   function patch(){
-    if(typeof window.itemChoices!=='function'||window.__dotaLevelsPatched)return;
-    var base=window.itemChoices;
+    if(typeof window.itemChoices!=='function')return;
+    var old=window.itemChoices;
     window.itemChoices=function(){
-      var html=base.apply(this,arguments);
-      var cat=document.querySelector('.categories .cat.active');
-      var category=cat?cat.dataset.category:'Все';
-      var extra=levelCards(category);
-      return html+extra;
+      var active=document.querySelector('.categories .cat.active'),cat=active?active.dataset.category:(typeof itemCategory!=='undefined'?itemCategory:'Все');
+      var base=old();
+      if(cat==='Магия'||cat==='Аксессуары'){
+        var extra=levelCards(cat).filter(function(n){return base.indexOf(n)<0;});
+        if(extra.length){var h=extra.map(function(x){return '<button class="item-choice" data-item="'+esc(x)+'" draggable="true">'+(typeof imageTag==='function'?imageTag(x):'')+'<span class="item-name">'+esc(x)+'</span></button>';}).join('');base+=h;}
+      }
+      return base;
     };
-    window.__dotaLevelsPatched=true;
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',patch,{once:true});else patch();
+  function start(){patch();}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
