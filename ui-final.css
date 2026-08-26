@@ -1,0 +1,9 @@
+/* Final navigation and builds filters */
+html,body{background:#080b10!important}
+.bottom-nav{bottom:calc(7px + env(safe-area-inset-bottom));height:54px;background:#11171f!important;background-color:#11171f!important;border-color:#293442!important;grid-template-columns:repeat(5,1fr);padding:4px;overflow:hidden}
+.bottom-nav .nav-btn{display:flex;align-items:center;justify-content:center;height:100%;padding:0;border:1px solid transparent!important;border-radius:10px;background:transparent!important;color:#738195;font-size:0}
+.bottom-nav .nav-btn.active{border-color:#d7dee6!important;color:#f1f4f7;background:#18212b!important}
+.bottom-nav .nav-icon{display:block;font-size:22px;line-height:1}
+.bottom-nav .nav-btn small{display:none!important}
+.build-filters{margin:12px 0}.build-role-filter{display:flex;gap:6px;margin-top:7px}.build-role-filter button{flex:1;background:#17212c;border:1px solid #293645;border-radius:9px;padding:8px;color:#9aa7b6}.build-role-filter button.active{background:#dfe6ed;color:#0b1016;border-color:#dfe6ed}
+@media(max-width:599px){.bottom-nav{width:94%;bottom:calc(6px + env(safe-area-inset-bottom));height:52px}.bottom-nav .nav-icon{font-size:21px}.app{padding-bottom:72px}}
