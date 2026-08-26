@@ -29,11 +29,18 @@ jobs:
           set -euo pipefail
           mkdir -p assets/items
           find dota_download/abilities_items -type f -name 'item_*.png' -exec cp -f {} assets/items/ \; || true
+          curl -fsSL --compressed -A 'DotaAssistant/1.03 asset importer' 'https://raw.githubusercontent.com/DotaFlow/steam_api_dumps/master/web/items/_ItemsList.json' -o /tmp/itemslist.json
           python3 - <<'PY'
-          import json, os, re, urllib.request
+          import json, os, re
           root='dota_download/data'
           items_file=os.path.join(root,'opendota_items.json')
           items=json.load(open(items_file,encoding='utf-8')) if os.path.exists(items_file) else {}
+          dump=json.load(open('/tmp/itemslist.json',encoding='utf-8'))
+          rows=dump.get('result',{}).get('data',{}).get('itemabilities',[])
+          neutral_names=set()
+          for r in rows:
+              if int(r.get('neutral_item_tier',-1))>=0 and r.get('name_loc'):
+                  neutral_names.add(r['name_loc'])
           catalog={"Другое":[],"Нейтральные":[],"Зачарования":[]}
           def slug(s):
               s=s.lower().replace("'",'').replace('&','and')
@@ -41,9 +48,10 @@ jobs:
           for v in (items.values() if isinstance(items,dict) else items):
               name=v.get('dname') or v.get('name','').replace('item_','').replace('_',' ')
               if not name: continue
-              tier=v.get('neutral_tier')
-              cat='Нейтральные' if tier else 'Другое'
+              cat='Нейтральные' if name in neutral_names else 'Другое'
               if name not in catalog[cat]: catalog[cat].append(name)
+          for name in sorted(neutral_names,key=lambda x:x.lower()):
+              if name not in catalog['Нейтральные']: catalog['Нейтральные'].append(name)
           for k in catalog: catalog[k]=sorted(set(catalog[k]),key=lambda x:x.lower())
           with open('assets/catalog.js','w',encoding='utf-8') as f:
               f.write('window.DOTA_EXTRA_CATALOG='+json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+';\n')
@@ -65,6 +73,7 @@ jobs:
               except Exception: pass
           with open(old,'w',encoding='utf-8') as f: json.dump(manifest,f,ensure_ascii=False,indent=2)
           print('Items in manifest:',len(manifest['items']))
+          print('Neutral items:',len(catalog['Нейтральные']))
           PY
 
       - name: Download neutral enchantment icons from Liquipedia Commons
