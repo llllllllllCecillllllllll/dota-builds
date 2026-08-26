@@ -1,15 +1,27 @@
 (function(){
   'use strict';
   var originalItemChoices=null;
-  var SHOP_EXTRA=["Aeon Disk","Blade Mail","Blade of Alacrity","Blitz Knuckles","Blood Grenade","Chasm Stone","Consecrated Wraps","Crella's Crozier","Crown","Diadem","Diffusal Blade","Dragon Lance","Eaglesong","Energy Booster","Essence Distiller","Eul's Scepter of Divinity","Eye of Skadi","Falcon Blade","Fluffy Hat","Gem of True Sight","Ghost Scepter","Gloves of Haste","Hand of Midas","Headdress","Heart of Tarrasque","Helm of Iron Will","Helm of the Dominator","Helm of the Overlord","Hydra's Breath","Hyperstone","Infused Raindrops","Khanda","Mage Slayer","Magic Stick","Manta Style","Mask of Madness","Meteor Hammer","Moon Shard","Morbid Mask","Mystic Staff","Nullifier","Oblivion Staff","Ogre Axe","Orb of Blight","Orb of Corrosion","Orb of Frost","Orb of Venom","Orchid Malevolence","Parasma","Perseverance","Phylactery","Platemail","Point Booster","Quelling Blade","Reaver","Revenant's Brooch","Ring of Basilius","Ring of Health","Ring of Regen","Ring of Tarrasque","Rod of Atos","Sacred Relic","Sage's Mask","Sange","Shadow Amulet","Shawl","Skull Basher","Soul Booster","Soul Ring","Specialist's Array","Splintmail","Staff of Wizardry","Talisman of Evasion","Tiara of Selemene","Ultimate Orb","Vitality Booster","Vladmir's Offering","Void Stone","Voodoo Mask","Wind Lace","Witch Blade","Wizard Hat"];
-  var NEUTRAL=["Occult Bracelet","Kobold Cup","Chipped Vest","Pollywog Charm","Dormant Curio","Duelist Gloves","Weighted Dice","Ash Legion Shield","Dagger of Ristul","Stonefeather Satchel","Possessed Mask","Forager's Kit","Essence Ring","Mana Draught","Poor Man's Shield","Searing Signet","Tumbler's Toy","Defiant Shell","Crippling Crossbow","Medallion of Courage","Seeds of Serenity","Serrated Shiv","Gunpowder Gauntlet","Jidi Pollen Bag","Psychic Headband","Unrelenting Eye","Cloak of Flames","Spellslinger","Stormcrafter","Partisan's Brand","Giant's Maul","Rattlecage","Idol of Scree'auk","Flayer's Bota","Metamorphic Mandible","Dandelion Amulet","Enchanter's Bauble","Prophet's Pendulum","Conjurer's Catalyst","Stygian Desolator","Fallen Sky","Book of the Dead","Minotaur Horn","Spider Legs","Riftshadow Prism","Dezun Bloodrite","Divine Regalia","Harmonizer","Witchbane"];
-  var ENCHANT=["Quickened","Vital","Brawny","Tough","Alert","Mystical","Greedy","Crude","Nimble","Keen-eyed","Titanic","Timeless","Evolved","Fleetfooted","Vampiric","Hulking","Audacious","Feverish","Manic"];
-  var HIDE=["Quarterstaff","Kaya and Yasha","Eul's Scepter","Philosopher's Stone","Arcane Ring","Pig Pole","Bullwhip","Vambrace","Ceremonial Robe","Ninja Gear","Giant's Ring","Mirror Shield"];
+  var C={
+    'Расходники':['Town Portal Scroll','Clarity','Faerie Fire','Smoke of Deceit','Observer Ward','Sentry Ward','Enchanted Mango','Healing Salve','Tango','Blood Grenade','Dust of Appearance','Bottle','Infused Raindrops','Aghanim\'s Shard'],
+    'Атрибуты':['Iron Branch','Gauntlets of Strength','Slippers of Agility','Mantle of Intelligence','Circlet','Belt of Strength','Band of Elvenskin','Robe of the Magi','Crown','Ogre Axe','Blade of Alacrity','Staff of Wizardry','Diadem','Ghost Scepter'],
+    'Снаряжение':['Quelling Blade','Ring of Protection','Blades of Attack','Orb of Frost','Gloves of Haste','Chainmail','Broadsword','Orb of Blight','Blitz Knuckles','Splintmail','Claymore','Orb of Venom','Javelin','Helm of Iron Will','Mithril Hammer'],
+    'Разное':['Ring of Regen','Sage\'s Mask','Wind Lace','Magic Stick','Fluffy Hat','Wizard Hat','Boots of Speed','Voodoo Mask','Shawl','Shadow Amulet','Gem of True Sight','Morbid Mask','Cloak','Chasm Stone','Blink Dagger'],
+    'Потайная лавка':['Ring of Health','Void Stone','Talisman of Evasion','Platemail','Ring of Tarrasque','Tiara of Selemene','Hyperstone','Demon Edge','Vitality Booster','Energy Booster','Point Booster','Sacred Relic','Reaver','Eaglesong','Mystic Staff','Ultimate Orb'],
+    'Аксессуары':['Magic Wand','Bracer','Wraith Band','Null Talisman','Power Treads','Soul Ring','Orb of Corrosion','Falcon Blade','Phase Boots','Perseverance','Mask of Madness','Oblivion Staff','Boots of Travel','Boots of Travel 2','Hand of Midas','Moon Shard','Soul Booster'],
+    'Поддержка':['Ring of Basilius','Headdress','Urn of Shadows','Tranquil Boots','Arcane Boots','Mekansm','Essence Distiller','Drum of Endurance','Pavise','Guardian Greaves','Spirit Vessel','Boots of Bearing','Solar Crest','Glimmer Cape','Holy Locket','Pipe of Insight'],
+    'Магия':['Veil of Discord','Rod of Atos','Eul\'s Scepter of Divinity','Phylactery','Bloodstone','Gleipnir','Wind Waker','Khanda','Force Staff','Aether Lens','Meteor Hammer','Dagon','Aghanim\'s Scepter','Crella\'s Crozier','Octarine Core','Orchid Malevolence','Refresher Orb','Ethereal Blade','Scythe of Vyse','Bloodthorn'],
+    'Броня':['Buckler','Vanguard','Blade Mail','Helm of the Dominator','Vladmir\'s Offering','Crimson Guard','Armlet of Mordiggian','Helm of the Overlord','Consecrated Wraps','Aeon Disk','Lotus Orb','Black King Bar','Shiva\'s Guard','Linken\'s Sphere','Assault Cuirass','Heart of Tarrasque'],
+    'Оружие':['Crystalys','Mage Slayer','Heaven\'s Halberd','Desolator','Revenant\'s Brooch','Skull Basher','Maelstrom','Shadow Blade','Daedalus','Abyssal Blade','Mjollnir','Silver Edge','Battle Fury','Nullifier','Manta Style','Radiance','Divine Rapier','Monkey King Bar','Butterfly','Satanic'],
+    'Артефакты':['Sange','Yasha','Kaya','Dragon Lance','Kaya and Sange','Sange and Yasha','Yasha and Kaya','Hurricane Pike','Echo Sabre','Diffusal Blade','Witch Blade','Specialist\'s Array','Harpoon','Disperser','Parasma','Hydra\'s Breath','Overwhelming Blink','Swift Blink','Arcane Blink','Eye of Skadi']
+  };
+  var NEUTRAL=['Occult Bracelet','Kobold Cup','Chipped Vest','Pollywog Charm','Dormant Curio','Duelist Gloves','Weighted Dice','Ash Legion Shield','Dagger of Ristul','Stonefeather Satchel','Possessed Mask','Forager\'s Kit','Essence Ring','Mana Draught','Poor Man\'s Shield','Searing Signet','Tumbler\'s Toy','Defiant Shell','Crippling Crossbow','Medallion of Courage','Seeds of Serenity','Serrated Shiv','Gunpowder Gauntlet','Jidi Pollen Bag','Psychic Headband','Unrelenting Eye','Cloak of Flames','Spellslinger','Stormcrafter','Partisan\'s Brand','Giant\'s Maul','Rattlecage','Idol of Scree\'auk','Flayer\'s Bota','Metamorphic Mandible','Dandelion Amulet','Enchanter\'s Bauble','Prophet\'s Pendulum','Conjurer\'s Catalyst','Stygian Desolator','Fallen Sky','Book of the Dead','Minotaur Horn','Spider Legs','Riftshadow Prism','Dezun Bloodrite','Divine Regalia','Harmonizer','Witchbane'];
+  var ENCHANT=['Quickened','Vital','Brawny','Tough','Alert','Mystical','Greedy','Crude','Nimble','Keen-eyed','Titanic','Timeless','Evolved','Fleetfooted','Vampiric','Hulking','Audacious','Feverish','Manic'];
+  var HIDE=['Abyssal Blade Recipe','Aegis of the Immortal','Aghanim\'s Blessing','Aghanim\'s Blessing - Roshan','Aghanim\'s Shard - Consumable','Aegis of the Immortal','Ancient Guardian','Animal Courier','Bag of Gold','Block of Cheese','Cheese','Cornucopia','Eternal Shroud','Flying Courier','Necronomicon','Pocket Roshan','Pocket Tower','Roshan\'s Banner','Refresher Shard','Repair Kit','Tango (Shared)','Tier 1 Token','Tier 2 Token','Tier 3 Token','Tier 4 Token','Tier 5 Token','Tome of Knowledge','Tome of Aghanim','Observer and Sentry Wards','Whisper of the Dread'];
   function escLocal(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]||c;});}
   function unique(a){var seen=Object.create(null),out=[];(a||[]).forEach(function(x){x=String(x||'');if(x&&!seen[x]){seen[x]=1;out.push(x);}});return out;}
-  function baseHtml(){var wrap=document.createElement('div');wrap.innerHTML=originalItemChoices();wrap.querySelectorAll('.item-choice[data-item]').forEach(function(el){if(HIDE.indexOf(el.dataset.item)>=0)el.remove();});return Array.from(wrap.children).map(function(el){return el.outerHTML;}).join('');}
+  function allShop(){return unique(Object.keys(C).flatMap(function(k){return C[k];}));}
+  function matches(x,q){return !q||x.toLocaleLowerCase('ru-RU').includes(q);}
   function html(list){return unique(list).map(function(x){return '<button class="item-choice" data-item="'+escLocal(x)+'" draggable="true">'+imageTag(x)+'<span class="item-name">'+escLocal(x)+'</span></button>';}).join('');}
-  function allCurrent(){return unique([].concat(SHOP_EXTRA,NEUTRAL,ENCHANT));}
   function patch(){
     if(typeof window.itemChoices!=='function')return;
     if(!originalItemChoices)originalItemChoices=window.itemChoices;
@@ -18,19 +30,20 @@
       var cat=active?active.dataset.category:'Все';
       var input=document.getElementById('itemSearch');
       var q=(input?input.value:'').trim().toLocaleLowerCase('ru-RU');
-      var matches=function(x){return !q||x.toLocaleLowerCase('ru-RU').includes(q);};
-      if(cat==='Нейтральные')return html(NEUTRAL.filter(matches));
-      if(cat==='Зачарования')return html(ENCHANT.filter(matches));
-      var base=baseHtml();
-      var extra=cat==='Все'?SHOP_EXTRA:[];
-      return base+html(extra.filter(matches));
+      if(cat==='Нейтральные')return html(NEUTRAL.filter(function(x){return matches(x,q);}));
+      if(cat==='Зачарования')return html(ENCHANT.filter(function(x){return matches(x,q);}));
+      if(C[cat])return html(C[cat].filter(function(x){return matches(x,q);}));
+      return html(allShop().filter(function(x){return matches(x,q);}));
     };
   }
   function injectCategories(){
     var box=document.querySelector('.categories');if(!box)return;
-    ['Нейтральные','Зачарования'].forEach(function(cat){if(!box.querySelector('[data-category="'+cat+'"]')){var b=document.createElement('button');b.className='cat';b.dataset.category=cat;b.textContent=cat;box.appendChild(b);}});
+    var wanted=['Все','Расходники','Атрибуты','Снаряжение','Разное','Потайная лавка','Аксессуары','Магия','Оружие','Поддержка','Броня','Артефакты','Нейтральные'];
+    Array.from(box.querySelectorAll('.cat')).forEach(function(b){if(wanted.indexOf(b.dataset.category)<0)b.remove();});
+    wanted.forEach(function(cat){if(!box.querySelector('[data-category="'+cat+'"]')){var b=document.createElement('button');b.className='cat';b.dataset.category=cat;b.textContent=cat;box.appendChild(b);}});
+    Array.from(box.querySelectorAll('.cat')).forEach(function(b){b.classList.toggle('active',b.dataset.category===itemCategory);});
   }
-  function exposeCleanCatalog(){window.DOTA_EXTRA_CATALOG={"Другое":SHOP_EXTRA.slice(),"Нейтральные":NEUTRAL.slice(),"Зачарования":ENCHANT.slice()};}
+  function exposeCleanCatalog(){window.DOTA_EXTRA_CATALOG={};Object.keys(C).forEach(function(k){window.DOTA_EXTRA_CATALOG[k]=C[k].slice();});window.DOTA_EXTRA_CATALOG['Нейтральные']=NEUTRAL.slice();window.DOTA_EXTRA_CATALOG['Зачарования']=ENCHANT.slice();}
   function refreshGrid(){patch();injectCategories();exposeCleanCatalog();var grid=document.getElementById('itemGrid');if(grid&&typeof window.itemChoices==='function')grid.innerHTML=window.itemChoices();}
   function start(){patch();injectCategories();exposeCleanCatalog();if(document.getElementById('itemGrid'))refreshGrid();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
