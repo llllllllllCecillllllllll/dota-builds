@@ -16,7 +16,7 @@
   };
   var NEUTRAL=['Occult Bracelet','Kobold Cup','Chipped Vest','Pollywog Charm','Dormant Curio','Duelist Gloves','Weighted Dice','Ash Legion Shield','Dagger of Ristul','Stonefeather Satchel','Possessed Mask','Forager\'s Kit','Essence Ring','Mana Draught','Poor Man\'s Shield','Searing Signet','Tumbler\'s Toy','Defiant Shell','Crippling Crossbow','Medallion of Courage','Seeds of Serenity','Serrated Shiv','Gunpowder Gauntlet','Jidi Pollen Bag','Psychic Headband','Unrelenting Eye','Cloak of Flames','Spellslinger','Stormcrafter','Partisan\'s Brand','Giant\'s Maul','Rattlecage','Idol of Scree\'auk','Flayer\'s Bota','Metamorphic Mandible','Dandelion Amulet','Enchanter\'s Bauble','Prophet\'s Pendulum','Conjurer\'s Catalyst','Stygian Desolator','Fallen Sky','Book of the Dead','Minotaur Horn','Spider Legs','Riftshadow Prism','Dezun Bloodrite','Divine Regalia','Harmonizer','Witchbane'];
   var ENCHANT=['Quickened','Vital','Brawny','Tough','Alert','Mystical','Greedy','Crude','Nimble','Keen-eyed','Titanic','Timeless','Evolved','Fleetfooted','Vampiric','Hulking','Audacious','Feverish','Manic'];
-  var HIDE=['Abyssal Blade Recipe','Aegis of the Immortal','Aghanim\'s Blessing','Aghanim\'s Blessing - Roshan','Aghanim\'s Shard - Consumable','Aegis of the Immortal','Ancient Guardian','Animal Courier','Bag of Gold','Block of Cheese','Cheese','Cornucopia','Eternal Shroud','Flying Courier','Necronomicon','Pocket Roshan','Pocket Tower','Roshan\'s Banner','Refresher Shard','Repair Kit','Tango (Shared)','Tier 1 Token','Tier 2 Token','Tier 3 Token','Tier 4 Token','Tier 5 Token','Tome of Knowledge','Tome of Aghanim','Observer and Sentry Wards','Whisper of the Dread'];
+  var HIDE=['Abyssal Blade Recipe','Aegis of the Immortal','Aghanim\'s Blessing','Aghanim\'s Blessing - Roshan','Aghanim\'s Shard - Consumable','Ancient Guardian','Animal Courier','Bag of Gold','Block of Cheese','Cheese','Cornucopia','Eternal Shroud','Flying Courier','Necronomicon','Pocket Roshan','Pocket Tower','Roshan\'s Banner','Refresher Shard','Repair Kit','Tango (Shared)','Tier 1 Token','Tier 2 Token','Tier 3 Token','Tier 4 Token','Tier 5 Token','Tome of Knowledge','Tome of Aghanim','Observer and Sentry Wards','Whisper of the Dread'];
   function escLocal(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]||c;});}
   function unique(a){var seen=Object.create(null),out=[];(a||[]).forEach(function(x){x=String(x||'');if(x&&!seen[x]){seen[x]=1;out.push(x);}});return out;}
   function allShop(){return unique(Object.keys(C).flatMap(function(k){return C[k];}));}
@@ -45,6 +45,14 @@
   }
   function exposeCleanCatalog(){window.DOTA_EXTRA_CATALOG={};Object.keys(C).forEach(function(k){window.DOTA_EXTRA_CATALOG[k]=C[k].slice();});window.DOTA_EXTRA_CATALOG['Нейтральные']=NEUTRAL.slice();window.DOTA_EXTRA_CATALOG['Зачарования']=ENCHANT.slice();}
   function refreshGrid(){patch();injectCategories();exposeCleanCatalog();var grid=document.getElementById('itemGrid');if(grid&&typeof window.itemChoices==='function')grid.innerHTML=window.itemChoices();}
+  document.addEventListener('pointerdown',function(e){
+    var b=e.target.closest&&e.target.closest('.categories .cat');
+    if(!b)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    itemCategory=b.dataset.category||'Все';
+    refreshGrid();
+  },true);
   function start(){patch();injectCategories();exposeCleanCatalog();if(document.getElementById('itemGrid'))refreshGrid();}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
