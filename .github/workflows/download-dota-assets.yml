@@ -21,7 +21,7 @@ jobs:
         shell: pwsh
         run: |
           git clone --depth 1 https://github.com/CaptchaQ/dota2-assets-downloader.git downloader
-          ./downloader/download_dota_assets.ps1 -OutputRoot "$PWD/dota_download" -SkipHeroes -SkipAbilities -SkipHeroLegacy -SkipAbilitiesLegacy -SkipItemsLegacy -SkipData
+          ./downloader/download_dota_assets.ps1 -OutputRoot "$PWD/dota_download" -SkipHeroes -SkipAbilities -SkipHeroLegacy -SkipAbilitiesLegacy -SkipItemsLegacy
 
       - name: Build local item catalog
         shell: bash
@@ -37,17 +37,10 @@ jobs:
           catalog={"Другое":[],"Нейтральные":[],"Зачарования":[]}
           def slug(s):
               s=s.lower().replace("'",'').replace('&','and')
-              s=re.sub(r'[^a-z0-9]+','_',s).strip('_')
-              return s
+              return re.sub(r'[^a-z0-9]+','_',s).strip('_')
           for v in (items.values() if isinstance(items,dict) else items):
               name=v.get('dname') or v.get('name','').replace('item_','').replace('_',' ')
-              internal=v.get('name','').replace('item_','')
               if not name: continue
-              fn='item_'+internal+'.png'
-              src=os.path.join('assets/items',fn)
-              if not os.path.exists(src):
-                  alt=os.path.join('assets/items','item_'+slug(internal)+'.png')
-                  if os.path.exists(alt): src=alt
               tier=v.get('neutral_tier')
               cat='Нейтральные' if tier else 'Другое'
               if name not in catalog[cat]: catalog[cat].append(name)
