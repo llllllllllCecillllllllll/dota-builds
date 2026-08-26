@@ -44,15 +44,6 @@ jobs:
               tier=v.get('neutral_tier')
               cat='Нейтральные' if tier else 'Другое'
               if name not in catalog[cat]: catalog[cat].append(name)
-          try:
-              u='https://raw.githubusercontent.com/DotaFlow/steam_api_dumps/master/web/items/_NeutralItems.json'
-              data=json.load(urllib.request.urlopen(u,timeout=30))
-              vals=data.values() if isinstance(data,dict) else data
-              for v in vals:
-                  name=v.get('name') or v.get('localized_name') or v.get('dname')
-                  if name and name not in catalog['Нейтральные']: catalog['Нейтральные'].append(name)
-          except Exception as e:
-              print('Neutral dump warning:',e)
           for k in catalog: catalog[k]=sorted(set(catalog[k]),key=lambda x:x.lower())
           with open('assets/catalog.js','w',encoding='utf-8') as f:
               f.write('window.DOTA_EXTRA_CATALOG='+json.dumps(catalog,ensure_ascii=False,separators=(',',':'))+';\n')
@@ -74,38 +65,36 @@ jobs:
               except Exception: pass
           with open(old,'w',encoding='utf-8') as f: json.dump(manifest,f,ensure_ascii=False,indent=2)
           print('Items in manifest:',len(manifest['items']))
-          print('Neutral names:',len(catalog['Нейтральные']))
           PY
 
       - name: Download neutral enchantment icons from Liquipedia Commons
         shell: bash
         run: |
+          set -euo pipefail
+          mkdir -p assets/items/enchantments
+          curl -fsSL --compressed -A 'DotaAssistant/1.03 asset importer' 'https://liquipedia.net/commons/api.php?action=query&list=categorymembers&cmtitle=Category:Dota_2_neutral_item_enchantments_icons&cmlimit=500&format=json' -o /tmp/enchantment_category.json
           python3 - <<'PY'
-          import json, os, urllib.parse, urllib.request
-          os.makedirs('assets/items/enchantments',exist_ok=True)
+          import json, os, subprocess, urllib.parse
           api='https://liquipedia.net/commons/api.php'
-          params={'action':'query','list':'categorymembers','cmtitle':'Category:Dota_2_neutral_item_enchantments_icons','cmlimit':'500','format':'json'}
-          req=urllib.request.Request(api+'?'+urllib.parse.urlencode(params),headers={'User-Agent':'DotaAssistant/1.03 asset importer'})
-          data=json.load(urllib.request.urlopen(req,timeout=30))
-          members=data.get('query',{}).get('categorymembers',[])
+          members=json.load(open('/tmp/enchantment_category.json',encoding='utf-8')).get('query',{}).get('categorymembers',[])
           catalog=[]
           for m in members:
               title=m.get('title','')
               if not title.startswith('File:'): continue
-              q={'action':'query','titles':title,'prop':'imageinfo','iiprop':'url','format':'json'}
-              req=urllib.request.Request(api+'?'+urllib.parse.urlencode(q),headers={'User-Agent':'DotaAssistant/1.03 asset importer'})
-              d=json.load(urllib.request.urlopen(req,timeout=30))
-              pages=d.get('query',{}).get('pages',{})
-              page=next(iter(pages.values()),{})
-              info=(page.get('imageinfo') or [{}])[0]
+              q=api+'?'+urllib.parse.urlencode({'action':'query','titles':title,'prop':'imageinfo','iiprop':'url','format':'json'})
+              raw=subprocess.check_output(['curl','-fsSL','--compressed','-A','DotaAssistant/1.03 asset importer',q],text=True)
+              pages=json.loads(raw).get('query',{}).get('pages',{})
+              info=(next(iter(pages.values()),{}).get('imageinfo') or [{}])[0]
               url=info.get('url')
               if not url: continue
               name=title[5:].replace(' icon.png','').replace(' Enchantment itemicon dota2 gameasset.png','').replace(' Enchantment icon.png','')
-              out='assets/items/enchantments/'+name.lower().replace(' ','_').replace("'",'')+'.png'
+              safe=name.lower().replace(' ','_').replace("'",'')
+              out='assets/items/enchantments/'+safe+'.png'
               try:
-                  urllib.request.urlretrieve(url,out)
-                  catalog.append((name,'items/enchantments/'+os.path.basename(out)))
-              except Exception as e: print('skip',title,e)
+                  subprocess.run(['curl','-fsSL','--compressed','-A','DotaAssistant/1.03 asset importer','-L',url,'-o',out],check=True)
+                  catalog.append((name,'items/enchantments/'+safe+'.png'))
+              except subprocess.CalledProcessError as e:
+                  print('skip',title,e)
           with open('assets/enchantments.json','w',encoding='utf-8') as f: json.dump(catalog,f,ensure_ascii=False,indent=2)
           print('Downloaded enchantments:',len(catalog))
           PY
