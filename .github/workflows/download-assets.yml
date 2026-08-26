@@ -1,0 +1,83 @@
+name: Download Dota assets
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download official Dota 2 assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/heroes assets/items
+          python - <<'PY'
+          import json, os, re, urllib.request
+          from pathlib import Path
+
+          root=Path('assets')
+          root.mkdir(exist_ok=True)
+          headers={'User-Agent':'Dota-Assistant asset updater'}
+
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return r.read()
+
+          base='https://cdn.cloudflare.steamstatic.com'
+          heroes=json.loads(get('https://raw.githubusercontent.com/odota/dotaconstants/master/build/heroes.json'))
+          items=json.loads(get('https://raw.githubusercontent.com/odota/dotaconstants/master/build/items.json'))
+
+          hero_map={}
+          for h in heroes.values():
+              name=h.get('localized_name')
+              img=h.get('icon') or ''
+              if not name or not img: continue
+              path=img.split('?')[0]
+              slug=Path(path).stem
+              out=f'heroes/{slug}.png'
+              try:
+                  (root/out).write_bytes(get(base+path))
+                  hero_map[name]=out
+              except Exception as e:
+                  print('hero failed',name,e)
+
+          item_map={}
+          for it in items.values():
+              name=it.get('dname')
+              img=it.get('img') or ''
+              if not name or not img: continue
+              path=img.split('?')[0]
+              slug=Path(path).stem
+              out=f'items/{slug}.png'
+              try:
+                  (root/out).write_bytes(get(base+path))
+                  item_map[name]=out
+              except Exception as e:
+                  print('item failed',name,e)
+
+          (root/'manifest.json').write_text(json.dumps({'heroes':hero_map,'items':item_map},ensure_ascii=False,indent=2),encoding='utf-8')
+          print('heroes:',len(hero_map),'items:',len(item_map))
+          PY
+
+      - name: Commit assets
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets
+          if git diff --cached --quiet; then
+            echo 'No asset changes.'
+          else
+            git commit -m 'Add local Dota 2 hero and item assets'
+            git push
+          fi
