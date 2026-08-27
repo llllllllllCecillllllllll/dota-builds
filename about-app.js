@@ -16,7 +16,7 @@
   function modal(inner){const root=document.getElementById('modal');if(!root)return;root.innerHTML='<div class="modal"><div class="sheet about-sheet">'+inner+'</div></div>';}
   function showAbout(){
     modal('<div class="sheet-head"><div><h3>О приложении</h3><div class="muted">Dota Assistant</div></div><button type="button" class="close" data-about-close>Закрыть</button></div>'+
-      '<div class="about-card"><div class="about-row"><span>Версия</span><strong>'+esc(VERSION)+'</strong></div><div class="about-row"><span>Разработчик</span><strong>'+esc(DEVELOPER)+'</strong></div><div class="about-row"><span>Дата версии</span><strong>'+esc(CREATED)+'</strong></div></div>'+
+      '<div class="about-card"><div class="about-row"><span>Версия:</span><strong>'+esc(VERSION)+'</strong></div><div class="about-row"><span>Разработчик:</span><strong>'+esc(DEVELOPER)+'</strong></div><div class="about-row"><span>Дата версии:</span><strong>'+esc(CREATED)+'</strong></div></div>'+
       '<button type="button" class="about-link" data-show-versions>Версии и изменения <span>›</span></button>');
   }
   function showVersions(){
