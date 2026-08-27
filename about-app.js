@@ -1,11 +1,10 @@
 (function(){
 'use strict';
 const VERSION='1.04';
-const DEVELOPER='Сабир';
+const DEVELOPER='#4';
 const CREATED='27.08.2026';
 const CHANGES={'1.04':['Добавлен раздел «О приложении».','Добавлен журнал версий с датами и изменениями.'],'1.03':['Добавлена расширенная база предметов и нейтральных предметов.','Исправлены категории предметов, навигация и локальная загрузка изображений.'],'1.02':['Исправлены стабильность создания и сохранения сборок, фильтры и дерево закупки.'],'1.01':['Добавлена базовая версия редактора сборок и локального каталога.']};
-window.DOTA_APP_INFO={VERSION,DEVELOPER,CREATED,CHANGES};
-window.showAbout=showAbout;window.showVersions=showVersions;
+window.DOTA_APP_INFO={VERSION,DEVELOPER,CREATED,CHANGES};window.showAbout=showAbout;window.showVersions=showVersions;
 function esc(s){return String(s).replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));}
 function ensureStyles(){if(document.getElementById('about-app-styles'))return;const s=document.createElement('style');s.id='about-app-styles';s.textContent='#modal .about-sheet{background:#10161e!important;color:#edf2f7!important}#modal .about-sheet .about-card{margin-top:14px;display:grid;gap:8px;background:#111922;border:1px solid #263341;border-radius:12px;padding:14px}#modal .about-sheet .about-row{display:flex;align-items:baseline;gap:8px;line-height:1.35}#modal .about-sheet .about-row span{color:#aeb9c7}#modal .about-sheet .about-row strong{color:#f1f4f7}#modal .about-sheet .about-link{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:10px;padding:11px 13px;background:#1a2430!important;color:#e7edf3!important;border:1px solid #2c3948!important;border-radius:9px;cursor:pointer}#modal .about-sheet .about-link:hover{background:#202c38!important}#modal .about-sheet .version-block{padding:9px 0 12px;border-bottom:1px solid #263341}#modal .about-sheet .version-block:last-child{border-bottom:0}#modal .about-sheet .version-head{display:flex;align-items:baseline;gap:16px;margin-bottom:5px}#modal .about-sheet .version-head strong{font-size:16px;color:#f1f4f7}#modal .about-sheet .version-head span{font-size:13px;color:#aeb9c7}#modal .about-sheet ul{margin:5px 0 0;padding-left:24px}#modal .about-sheet li{margin:4px 0}';document.head.appendChild(s)}
 function modal(inner){ensureStyles();const root=document.getElementById('modal');if(!root)return;root.innerHTML='<div class="modal"><div class="sheet about-sheet">'+inner+'</div></div>'}
