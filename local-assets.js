@@ -2,7 +2,7 @@ window.DOTA_LOCAL_ASSETS={heroes:{},items:{},ready:false};
 (function(){
   var HERO_ALIASES={"Outworld Destroyer":"Outworld Devourer","Ringmaster":"Ring Master"};
   var HERO_FALLBACKS={"Kez":"assets/heroes/kez.png","Largo":"assets/heroes/largo.png","Ringmaster":"assets/heroes/ringmaster.png","Underlord":"assets/heroes/abyssal_underlord.png"};
-  var ITEM_ALIASES={"Kaya and Yasha":"Yasha and Kaya","Eul's Scepter":"Eul's Scepter of Divinity"};
+  var ITEM_ALIASES={"Kaya and Yasha":"Yasha and Kaya","Eul's Scepter":"Eul's Scepter of Divinity","Dagon 1":"Dagon","Dagon 2":"Dagon","Dagon 3":"Dagon","Dagon 4":"Dagon","Dagon 5":"Dagon","Boots of Travel 1":"Boots of Travel"};
   var ITEM_FALLBACKS={"Kaya and Yasha":"assets/items/yasha_and_kaya.png"};
   function lookup(map,name,aliases){if(map[name])return map[name];var a=aliases[name];if(a&&map[a])return map[a];return ''}
   function slug(name){return String(name||'').toLowerCase().replace(/&/g,'and').replace(/['’]/g,'').replace(/[^a-z0-9]+/gi,'_').replace(/^_+|_+$/g,'')}
