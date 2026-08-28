@@ -7,13 +7,17 @@ body{padding:0}
 /* Bottom navigation: one stable position, independent of page content */
 .bottom-nav{position:fixed!important;left:50%!important;bottom:10px!important;top:auto!important;transform:translateX(-50%)!important;width:min(calc(100vw - 20px),540px)!important;height:56px!important;margin:0!important;z-index:50!important;flex:none!important}
 
-/* Modals / bottom sheets must always be above the navigation */
-#modal{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;z-index:100!important;pointer-events:auto!important}
-#modal .modal{z-index:101!important}
-#modal .sheet{position:relative;z-index:102!important;width:min(100%,760px);box-sizing:border-box}
+/* About-app modal: the modal root itself must form a top-level stacking layer.
+   The previous rule only styled #modal, but a z-index is ineffective if the
+   root is not positioned in every browser/layout combination. */
+#modal{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;display:block!important;z-index:9999!important;pointer-events:auto!important}
+#modal .modal{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;z-index:10000!important;pointer-events:auto!important;display:flex!important;align-items:flex-end!important;justify-content:center!important}
+#modal .sheet{position:relative!important;z-index:10001!important;width:min(100%,760px);box-sizing:border-box}
+#modal .about-sheet{position:relative!important;z-index:10002!important}
 
-/* Do not let the fixed navigation cover modal content */
-#modal ~ .bottom-nav{z-index:49!important}
+/* Never allow the fixed navigation to appear above an open modal */
+body:has(#modal .modal) .bottom-nav{z-index:40!important}
+#modal ~ .bottom-nav{z-index:40!important}
 
 /* Phone layout */
 @media (max-width:599px){
