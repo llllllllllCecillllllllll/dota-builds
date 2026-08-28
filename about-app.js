@@ -6,7 +6,7 @@ const DEVELOPER='Сабир';
 const CREATED='28.08.2026';
 const THEME_KEY='dota-assistant-theme';
 const CHANGES={
-  '1.05':['Обновлён визуальный стиль интерфейса.','Добавлена тёмная тема с туманным лесом ночью.','Добавлена светлая тема — туманный лес на рассвете.','Добавлено переключение темы одним касанием в разделе «О приложении».','Красные акцентные элементы приведены к цвету логотипа и получили потёртую текстуру.'],
+  '1.05':['Обновлён визуальный стиль интерфейса.','Добавлена тёмная тема с туманным лесом ночью.','Добавлена светлая тема — туманный лес на рассвете.','Добавлено переключение темы одним касанием в разделе «О приложении».','Красные акцентные элементы получили потёртую текстуру и более тёмный оттенок.'],
   '1.04':['Добавлен раздел «О приложении».','Добавлен журнал версий с датами и изменениями.'],
   '1.03':['Добавлена расширенная база предметов и нейтральных предметов.','Исправлены категории предметов, навигация и локальная загрузка изображений.'],
   '1.02':['Исправлены стабильность создания и сохранения сборок, фильтры и дерево закупки.'],
@@ -36,7 +36,6 @@ function installStyles(){
   const style=document.createElement('style');
   style.id='about-app-styles-v2';
   style.textContent=`
-/* About modal: isolated theme-safe styles */
 #modal .about-sheet{background:#10161e!important;color:#edf2f7!important;border-color:#293544!important;}
 #modal .about-sheet .sheet-head h3{color:#edf2f7!important;}
 #modal .about-sheet .muted{color:#8b98a7!important;}
@@ -45,10 +44,8 @@ function installStyles(){
 #modal .about-sheet .about-row{color:#aeb9c7!important;}
 #modal .about-sheet .about-row span{color:#aeb9c7!important;}
 #modal .about-sheet .about-row strong{color:#f2f5f8!important;}
-#modal .about-sheet .theme-toggle,
-#modal .about-sheet .about-link{display:flex!important;align-items:center!important;justify-content:space-between!important;width:100%!important;min-height:44px!important;margin-top:10px!important;padding:11px 13px!important;background:#18212c!important;color:#edf2f7!important;border:1px solid #293544!important;border-radius:10px!important;box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important;}
-#modal .about-sheet .theme-toggle:hover,
-#modal .about-sheet .about-link:hover{background:#202b37!important;}
+#modal .about-sheet .theme-toggle,#modal .about-sheet .about-link{display:flex!important;align-items:center!important;justify-content:space-between!important;width:100%!important;min-height:44px!important;margin-top:10px!important;padding:11px 13px!important;background:#18212c!important;color:#edf2f7!important;border:1px solid #293544!important;border-radius:10px!important;box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important;}
+#modal .about-sheet .theme-toggle:hover,#modal .about-sheet .about-link:hover{background:#202b37!important;}
 #modal .about-sheet .theme-state{color:#9ca9b8!important;font-size:12px!important;}
 #modal .about-sheet .theme-icon{font-size:16px!important;}
 #modal .about-sheet .version-block{padding:12px 0!important;border-bottom:1px solid #26313d!important;}
@@ -56,24 +53,19 @@ function installStyles(){
 #modal .about-sheet .version-head span{color:#8b98a7!important;}
 #modal .about-sheet .version-block ul{color:#dce3ea!important;}
 #modal .about-sheet .version-block li{color:#dce3ea!important;}
-
 html[data-theme="light"] #modal .about-sheet{background:#f4f8f7!important;color:#182028!important;border-color:#c5d0ce!important;}
 html[data-theme="light"] #modal .about-sheet .sheet-head h3{color:#182028!important;}
 html[data-theme="light"] #modal .about-sheet .muted{color:#647276!important;}
 html[data-theme="light"] #modal .about-sheet .close{background:#e3eae9!important;color:#243035!important;border-color:#c5d0ce!important;}
 html[data-theme="light"] #modal .about-sheet .about-card{background:#e9efee!important;color:#243035!important;border-color:#c5d0ce!important;}
-html[data-theme="light"] #modal .about-sheet .about-row,
-html[data-theme="light"] #modal .about-sheet .about-row span{color:#647276!important;}
+html[data-theme="light"] #modal .about-sheet .about-row,html[data-theme="light"] #modal .about-sheet .about-row span{color:#647276!important;}
 html[data-theme="light"] #modal .about-sheet .about-row strong{color:#182028!important;}
-html[data-theme="light"] #modal .about-sheet .theme-toggle,
-html[data-theme="light"] #modal .about-sheet .about-link{background:#e3eae9!important;color:#243035!important;border-color:#c5d0ce!important;}
-html[data-theme="light"] #modal .about-sheet .theme-toggle:hover,
-html[data-theme="light"] #modal .about-sheet .about-link:hover{background:#d9e2e0!important;}
+html[data-theme="light"] #modal .about-sheet .theme-toggle,html[data-theme="light"] #modal .about-sheet .about-link{background:#e3eae9!important;color:#243035!important;border-color:#c5d0ce!important;}
+html[data-theme="light"] #modal .about-sheet .theme-toggle:hover,html[data-theme="light"] #modal .about-sheet .about-link:hover{background:#d9e2e0!important;}
 html[data-theme="light"] #modal .about-sheet .theme-state{color:#647276!important;}
 html[data-theme="light"] #modal .about-sheet .version-block{border-bottom-color:#c5d0ce!important;}
 html[data-theme="light"] #modal .about-sheet .version-head strong{color:#182028!important;}
-html[data-theme="light"] #modal .about-sheet .version-head span,
-html[data-theme="light"] #modal .about-sheet .version-block li{color:#59696d!important;}
+html[data-theme="light"] #modal .about-sheet .version-head span,html[data-theme="light"] #modal .about-sheet .version-block li{color:#59696d!important;}
 `;
   document.head.appendChild(style);
 }
