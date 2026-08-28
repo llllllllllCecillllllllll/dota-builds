@@ -1,0 +1,10 @@
+/* v1.05 reference layout */
+.app{max-width:1400px!important;padding:38px 0 132px!important}
+.top{max-width:1400px!important;margin:0 auto 22px!important;padding-left:118px!important}
+.top:before{left:0!important;top:0!important;width:94px!important;height:94px!important}
+.home-card,.draft-placeholder,.ward-placeholder{max-width:1185px!important;margin-left:auto!important;margin-right:auto!important}
+.app>.wide{display:block!important;max-width:1185px!important;margin-left:auto!important;margin-right:auto!important}
+.build-filters,.build-grid{max-width:1185px!important;margin-left:auto!important;margin-right:auto!important}
+.build-grid{grid-template-columns:repeat(auto-fit,minmax(520px,1fr))!important}
+@media(max-width:900px){.app{max-width:none!important;padding:28px 18px 112px!important}.top{padding-left:104px!important}.home-card,.draft-placeholder,.ward-placeholder,.app>.wide,.build-filters,.build-grid{max-width:none!important}}
+@media(max-width:599px){.app{padding:20px 12px 96px!important}.top{padding-left:78px!important}}
