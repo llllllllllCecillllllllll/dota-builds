@@ -1,28 +1,30 @@
-/* v1.05 — modal panels must never be covered by bottom navigation */
-#modal:not(:empty) ~ #app .bottom-nav,
-body:has(#modal:not(:empty)) #app .bottom-nav{
-  display:none!important;
-}
-
+/* v1.06 — modal always stays above bottom navigation */
 #modal:not(:empty){
   position:fixed!important;
   inset:0!important;
-  z-index:100!important;
+  z-index:10000!important;
+  isolation:isolate!important;
 }
 
 #modal:not(:empty) .modal{
   position:fixed!important;
   inset:0!important;
-  z-index:101!important;
+  z-index:10001!important;
 }
 
 #modal:not(:empty) .sheet{
   position:relative!important;
-  z-index:102!important;
+  z-index:10002!important;
   max-height:calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
   max-height:calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))!important;
   overflow-y:auto!important;
   -webkit-overflow-scrolling:touch!important;
+}
+
+/* Do not allow the fixed navigation to sit over an open modal. */
+body:has(#modal:not(:empty)) .bottom-nav{
+  z-index:-1!important;
+  pointer-events:none!important;
 }
 
 @media(max-width:599px){
