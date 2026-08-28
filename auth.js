@@ -28,4 +28,7 @@ document.addEventListener('click',async e=>{const a=e.target.closest('[data-auth
 function init(){patchStorage();try{const s=JSON.parse(localStorage.getItem(SK)||'null');if(s?.user&&s?.token){session=s;user=s.user;loadCloud()}renderAccount()}catch(e){console.error(e);renderAccount()}}
 window.DTAuth={openLogin:loginForm,getUser:()=>user,renderAccount,saveBuild:async b=>{if(!session?.token)throw new Error('Вы не вошли в аккаунт');const d=await call('save_build',{token:session.token,build:row(b)});return d.build},deleteBuild:async id=>{if(!session?.token)throw new Error('Вы не вошли в аккаунт');return call('delete_build',{token:session.token,id})}};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else setTimeout(init,0);
+// Keep the account button attached to the current app shell. The app intentionally replaces .app on every navigation.
+function watchAppShell(){const root=document.querySelector('#app');if(!root)return;const observer=new MutationObserver(()=>{if(user)renderAccount()});observer.observe(root,{childList:true,subtree:true});window.__dtaAccountObserver=observer;renderAccount()}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',watchAppShell);else setTimeout(watchAppShell,0);
 })();
