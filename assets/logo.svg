@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <clipPath id="c"><circle cx="64" cy="64" r="55"/></clipPath>
+    <pattern id="dots" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.15" fill="#111" opacity=".28"/></pattern>
+  </defs>
+  <circle cx="64" cy="64" r="59" fill="#050505"/>
+  <circle cx="64" cy="64" r="55" fill="#c91d22"/>
+  <g clip-path="url(#c)">
+    <rect x="8" y="8" width="112" height="112" fill="url(#dots)"/>
+    <path d="M36 31a13 13 0 1 0 0 26 13 13 0 0 0 0-26Z" fill="#2da9ee" stroke="#050505" stroke-width="7"/>
+    <path d="M53 42l35 55a14 14 0 1 1-24 15L30 57a14 14 0 0 1 23-15Z" fill="#35aef2" stroke="#050505" stroke-width="7"/>
+    <path d="M87 29l22 1-17 19-19-17Z" fill="#39b1f3" stroke="#050505" stroke-width="7"/>
+    <path d="M34 78l19 17-22 6 5-23Z" fill="#39b1f3" stroke="#050505" stroke-width="7"/>
+    <path d="M12 35l13-12M96 16l-9 12M111 80l-11 12M22 106l9-11" stroke="#050505" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <circle cx="64" cy="64" r="55" fill="none" stroke="#ff3035" stroke-width="3"/>
+</svg>
