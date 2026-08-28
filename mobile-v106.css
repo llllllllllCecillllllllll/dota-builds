@@ -1,0 +1,55 @@
+/* v1.06 mobile interface polish */
+@media(max-width:600px){
+  html,body{width:100%;min-width:0;overflow-x:hidden;font-size:16px}
+  body{padding:0!important;background-attachment:scroll!important}
+  .app{width:100%!important;max-width:none!important;margin:0!important;padding:calc(env(safe-area-inset-top) + 54px) 16px calc(env(safe-area-inset-bottom) + 84px)!important}
+
+  /* Header: keep the page title clear of the iOS status bar and account button. */
+  .account-button{position:fixed!important;top:calc(env(safe-area-inset-top) + 8px)!important;right:12px!important;height:36px!important;padding:8px 12px!important;z-index:200!important}
+  .top{padding:0 0 16px!important;margin:0!important;max-width:none!important}
+  .top:before{display:none!important}
+  .brand{font-size:10px!important;letter-spacing:2.4px!important;line-height:1.2!important}
+  .title{font-size:30px!important;line-height:1.05!important;margin:5px 0 4px!important;letter-spacing:-.8px!important}
+  .sub{font-size:14px!important;line-height:1.35!important}
+
+  /* Main cards never exceed the phone viewport. */
+  .home-card,.draft-placeholder,.ward-placeholder,.build-card{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;border-radius:15px!important}
+  .home-card{padding:16px!important;margin-bottom:12px!important}
+  .home-card h2{font-size:20px!important;line-height:1.2!important}
+  .home-card p,.draft-placeholder p,.ward-placeholder p{font-size:14px!important;line-height:1.45!important}
+  .app>.wide,.build-filters,.build-grid{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important}
+  .primary{width:100%!important;min-height:52px!important;padding:12px 14px!important;font-size:18px!important;border-radius:15px!important}
+
+  /* Builds page: filters and empty state use the full available width. */
+  .search{width:100%!important;min-height:50px!important;font-size:16px!important;margin-bottom:10px!important}
+  .build-role-filter{width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+  .build-role-filter button{width:100%!important;height:42px!important;min-height:42px!important;font-size:15px!important}
+  .build-grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+  .build-card h3,.home-card h2,.page-head h2,.draft-placeholder h3,.ward-placeholder h3{overflow-wrap:anywhere}
+  .build-meta,.muted{overflow-wrap:anywhere}
+
+  /* Controls that have fixed-size Dota assets remain centered instead of overflowing. */
+  .inventory{max-width:100%!important;justify-content:center!important}
+  .item-grid{max-width:100%!important;justify-content:center!important}
+  .hero-select{max-width:100%!important;justify-content:center!important}
+  .roles{flex-wrap:wrap!important}
+  .card-actions{flex-wrap:wrap!important}
+
+  /* Bottom navigation is fixed to one stable row and respects the iPhone safe area. */
+  .bottom-nav{position:fixed!important;z-index:1000!important;left:12px!important;right:12px!important;width:auto!important;max-width:none!important;transform:none!important;bottom:calc(env(safe-area-inset-bottom) + 8px)!important;height:62px!important;min-height:62px!important;margin:0!important;padding:5px!important;border-radius:17px!important;contain:layout paint!important;will-change:transform!important}
+  .bottom-nav .nav-btn{height:52px!important;min-height:52px!important;transform:none!important;font-size:21px!important;border-radius:12px!important;padding:4px!important}
+
+  /* Sheets and notifications fit inside the visible phone area. */
+  .sheet{width:100%!important;max-width:100%!important;max-height:calc(100dvh - env(safe-area-inset-top) - 10px)!important;padding:16px!important}
+  .modal{padding:0!important}
+  .toast{bottom:calc(env(safe-area-inset-bottom) + 76px)!important;max-width:calc(100vw - 24px)!important;text-align:center!important}
+}
+
+@media(max-width:380px){
+  .app{padding-left:12px!important;padding-right:12px!important}
+  .title{font-size:27px!important}
+  .sub{font-size:13px!important}
+  .primary{font-size:17px!important}
+  .bottom-nav{left:8px!important;right:8px!important}
+  .bottom-nav .nav-btn{font-size:19px!important}
+}
