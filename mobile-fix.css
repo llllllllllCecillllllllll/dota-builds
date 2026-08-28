@@ -1,0 +1,43 @@
+/* Dota Assistant mobile layout + stable bottom navigation */
+*{box-sizing:border-box}
+html,body{width:100%;min-width:0;overflow-x:hidden}
+.bottom-nav{position:fixed!important;z-index:100!important;left:50%!important;right:auto!important;bottom:8px!important;transform:translate3d(-50%,0,0)!important;width:min(94vw,540px)!important;height:58px!important;min-height:58px!important;margin:0!important;padding:4px!important;box-sizing:border-box!important;contain:layout paint!important;will-change:transform!important}
+.bottom-nav .nav-btn{height:48px!important;min-height:48px!important;box-sizing:border-box!important;transform:none!important}
+@media(max-width:600px){
+  body{background-attachment:scroll!important}
+  .app{width:100%;max-width:none;margin:0;padding:12px 10px 82px!important}
+  .top{padding:4px 2px 14px}
+  .title{font-size:26px;line-height:1.1}
+  .sub{font-size:12px}
+  .home-card,.build-card,.draft-placeholder,.ward-placeholder{border-radius:14px;padding:14px}
+  .home-card h2{font-size:18px}
+  .primary{padding:12px}
+  .page-head{gap:8px;margin-bottom:12px}
+  .page-head h2{font-size:20px}
+  .search,.field{padding:10px}
+  .roles{flex-wrap:wrap}
+  .role{padding:8px 10px}
+  .inventory{grid-template-columns:repeat(3,85px);gap:4px;max-width:100%;justify-content:center}
+  .item-grid{grid-template-columns:repeat(3,85px);gap:6px;max-width:100%;justify-content:center}
+  .hero-select{grid-template-columns:repeat(2,100px);gap:7px}
+  .position-select{gap:5px}
+  .position-select button{padding:8px 5px;font-size:12px}
+  .build-role-filter{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .build-role-filter button{height:34px;min-width:0}
+  .mini-items{gap:4px;flex-wrap:wrap}
+  .card-actions{flex-wrap:wrap}
+  .timeline-wrap{padding-left:0;padding-right:0}
+  .sheet{width:100%;max-height:90vh;border-radius:18px 18px 0 0;padding:14px}
+  .bottom-nav{left:8px!important;right:8px!important;width:auto!important;max-width:none!important;transform:none!important;bottom:8px!important;height:58px!important;min-height:58px!important;border-radius:14px!important}
+  .bottom-nav .nav-btn{height:48px!important;min-height:48px!important;font-size:20px}
+  .toast{bottom:72px}
+}
+@media(max-width:340px){
+  .app{padding-left:8px!important;padding-right:8px!important}
+  .title{font-size:24px}
+  .home-card,.build-card,.draft-placeholder,.ward-placeholder{padding:12px}
+  .hero-select{grid-template-columns:repeat(2,96px)}
+  .hero-select button{width:96px;height:96px}
+  .bottom-nav{left:6px!important;right:6px!important}
+  .bottom-nav .nav-btn{padding-left:1px;padding-right:1px;font-size:19px}
+}
