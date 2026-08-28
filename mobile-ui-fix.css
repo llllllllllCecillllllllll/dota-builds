@@ -1,0 +1,40 @@
+/* Dota Assistant v1.05 — mobile layout and fixed navigation fix */
+html,body{width:100%;min-width:0;overflow-x:hidden}
+body{padding:0}
+#app{width:100%;min-width:0}
+.app{width:100%;max-width:760px;margin:0 auto;padding:18px 14px 90px}
+
+/* Bottom navigation: one stable position, independent of page content */
+.bottom-nav{position:fixed!important;left:50%!important;bottom:10px!important;top:auto!important;transform:translateX(-50%)!important;width:min(calc(100vw - 20px),540px)!important;height:56px!important;margin:0!important;z-index:50!important;flex:none!important}
+
+/* Modals / bottom sheets must always be above the navigation */
+#modal{position:fixed!important;inset:0!important;width:100%!important;height:100%!important;z-index:100!important;pointer-events:auto!important}
+#modal .modal{z-index:101!important}
+#modal .sheet{position:relative;z-index:102!important;width:min(100%,760px);box-sizing:border-box}
+
+/* Do not let the fixed navigation cover modal content */
+#modal ~ .bottom-nav{z-index:49!important}
+
+/* Phone layout */
+@media (max-width:599px){
+  .app{padding:14px 10px 86px}
+  .top{padding:6px 2px 14px}
+  .title{font-size:26px}
+  .home-card{padding:14px;border-radius:14px}
+  .page-head h2{font-size:20px}
+  .bottom-nav{width:calc(100vw - 16px)!important;bottom:8px!important;height:54px!important}
+  .nav-btn{font-size:20px;padding:3px 2px}
+  .sheet{max-height:calc(100dvh - 12px)!important;padding:14px!important}
+}
+
+@media (max-width:380px){
+  .app{padding-left:8px;padding-right:8px}
+  .bottom-nav{width:calc(100vw - 12px)!important}
+  .nav-btn{font-size:18px}
+}
+
+/* Safe-area support without changing the horizontal/vertical anchor */
+@supports (padding-bottom: env(safe-area-inset-bottom)){
+  .bottom-nav{bottom:max(8px,env(safe-area-inset-bottom))!important}
+  .app{padding-bottom:max(86px,calc(78px + env(safe-area-inset-bottom)))}
+}
