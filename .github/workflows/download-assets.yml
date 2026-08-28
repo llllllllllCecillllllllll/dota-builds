@@ -5,6 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Prevent concurrent asset writers from racing on main.
+concurrency:
+  group: dota-assistant-assets-main
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -97,12 +102,18 @@ jobs:
       - name: Commit assets
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          # The asset download changes the working tree. Autostash lets us
+          # rebase onto a newer main commit before creating the asset commit.
+          git pull --rebase --autostash origin main
+
           git add assets
           if git diff --cached --quiet; then
             echo 'No asset changes.'
           else
             git commit -m 'Repair local Dota hero and item assets'
-            git push
+            git push origin HEAD:main
           fi
