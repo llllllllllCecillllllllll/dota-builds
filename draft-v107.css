@@ -26,9 +26,9 @@
 #draft-v107 button.on.a{background:var(--rad);border-color:var(--rad);color:#0c1a13}
 #draft-v107 button.on.r{background:var(--gold);border-color:var(--gold);color:#241a05}
 #draft-v107 input{flex:1;min-width:140px}
-#draft-v107 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:6px;max-height:520px;overflow:auto;padding-right:4px}
-#draft-v107 .h{position:relative;border:2px solid transparent;border-radius:5px;overflow:hidden;cursor:pointer;aspect-ratio:16/9;background:#000}
-#draft-v107 .h img{width:100%;height:100%;object-fit:cover;display:block}
+#draft-v107 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:6px;max-height:520px;overflow:auto;padding-right:4px;align-content:start}
+#draft-v107 .h{position:relative;border:2px solid transparent;border-radius:5px;overflow:hidden;cursor:pointer;background:#000}
+#draft-v107 .h img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block}
 #draft-v107 .h.sel-e{border-color:var(--dire)}#draft-v107 .h.sel-a{border-color:var(--rad)}
 #draft-v107 .h.sel-e img,#draft-v107 .h.sel-a img{opacity:.45}
 #draft-v107 .h:hover{border-color:var(--gold)}
@@ -49,3 +49,11 @@
 #draft-v107 .msg{color:var(--mute);padding:12px 0}
 @media(max-width:900px){#draft-v107 main{grid-template-columns:1fr;padding:12px}#draft-v107 header{padding:14px}#draft-v107 .slot{width:82px}}
 @media(max-width:520px){#draft-v107 .card{grid-template-columns:64px 1fr auto;gap:7px;padding:5px}#draft-v107 .card img{width:64px}#draft-v107 .score{font-size:17px}#draft-v107 .grid{grid-template-columns:repeat(auto-fill,minmax(62px,1fr))}}
+
+/* v1.07 fix: draft now lives inside the normal .app shell */
+#draft-v107 .sub{font-size:12px!important;line-height:1.35!important}
+#draft-v107 .row>.sub{font-size:13px!important}
+#draft-v107 .grid{-webkit-overflow-scrolling:touch}
+@media(max-width:520px){#draft-v107 .grid{max-height:60vh}}
+html[data-theme="light"] #draft-v107{--bg:#f4f6f8;--panel:#ffffff;--line:#d5dbe3;--text:#1c2430;--mute:#5f6f73}
+html[data-theme="light"] #draft-v107 .slot span,html[data-theme="light"] #draft-v107 .h b{color:#fff}
